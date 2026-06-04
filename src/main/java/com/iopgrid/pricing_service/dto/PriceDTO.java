@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PriceResponse {
+public class PriceDTO {
 
     private Long productId;
 
