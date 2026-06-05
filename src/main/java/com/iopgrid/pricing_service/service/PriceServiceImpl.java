@@ -1,6 +1,8 @@
 package com.iopgrid.pricing_service.service;
 
 import com.iopgrid.pricing_service.dto.PriceDTO;
+import com.iopgrid.pricing_service.entity.PriceEntity;
+import com.iopgrid.pricing_service.exception.PriceNotFoundException;
 import com.iopgrid.pricing_service.repository.PriceRepository;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,29 @@ public class PriceServiceImpl implements PriceService {
             Long productId,
             Long brandId) {
 
-        return null;
+        PriceEntity priceEntity = priceRepository.findFirstByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(
+                        brandId,
+                        productId,
+                        applicationDate,
+                        applicationDate
+                )
+                .orElseThrow(() -> new PriceNotFoundException(
+                        "No price found for product "
+                        + productId
+                        + ", brand "
+                        + brandId
+                        + " and date "
+                        + applicationDate
+                        )
+                );
+
+        return new PriceDTO(
+                priceEntity.getProductId(),
+                priceEntity.getBrandId(),
+                priceEntity.getPriceList(),
+                priceEntity.getStartDate(),
+                priceEntity.getEndDate(),
+                priceEntity.getPrice()
+        );
     }
 }
