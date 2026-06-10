@@ -20,19 +20,23 @@ public class PriceServiceImpl implements PriceService {
     @Override
     public PriceDTO getApplicablePrice(LocalDateTime applicationDate, Long productId, Long brandId) {
 
-        PriceEntity priceEntity = priceRepository.findFirstByBrandIdAndProductIdAndStartDateLessThanEqualAndEndDateGreaterThanEqualOrderByPriorityDesc(
-                brandId,
-                productId,
-                applicationDate,
-                applicationDate
-        )
-                .orElseThrow(() -> new PriceNotFoundException(
-                        "No price found for product "
-                                + productId +
-                                ", brand "
-                                + brandId +
-                                " and date "
-                                + applicationDate)
+        PriceEntity priceEntity = priceRepository
+                .findApplicablePrices(
+                        brandId,
+                        productId,
+                        applicationDate
+                )
+                .stream()
+                .findFirst()
+                .orElseThrow(() ->
+                        new PriceNotFoundException(
+                                "No price found for product "
+                                        + productId +
+                                        ", brand "
+                                        + brandId +
+                                        " and date "
+                                        + applicationDate
+                        )
                 );
 
         return new PriceDTO(
