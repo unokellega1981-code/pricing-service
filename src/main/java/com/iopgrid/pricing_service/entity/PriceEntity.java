@@ -1,4 +1,3 @@
-
 package com.iopgrid.pricing_service.entity;
 
 import jakarta.persistence.*;
